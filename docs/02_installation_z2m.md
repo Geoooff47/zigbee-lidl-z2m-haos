@@ -43,7 +43,7 @@ Avant le premier démarrage, aller dans l'onglet **Configuration** de l'add-on.
 
 ```yaml
 serial:
-  port: 'tcp://192.168.X.X:8888'
+  port: 'tcp://192.168.2.224:8888'
   adapter: zstack
 
 mqtt:
@@ -57,13 +57,14 @@ frontend:
   port: 8099
 ```
 
-**Remplacer `192.168.X.X`** par l'IP réelle de la passerelle Lidl.
+> **IP de la passerelle Lidl HG06668 (flashée Tasmota) : `192.168.2.224`**  
+> Port TCP par défaut Tasmota : `8888`
 
 ### Paramètres expliqués
 
 | Paramètre | Valeur | Explication |
 |---|---|---|
-| `serial.port` | `tcp://IP:8888` | Coordinateur exposé via socket TCP par Tasmota |
+| `serial.port` | `tcp://192.168.2.224:8888` | Coordinateur CC2530 exposé via socket TCP par Tasmota |
 | `serial.adapter` | `zstack` | Type de puce : CC2530 = Z-Stack |
 | `mqtt.server` | `mqtt://core-mosquitto` | Broker Mosquitto interne HAOS |
 | `homeassistant.enabled` | `true` | Découverte automatique des appareils Zigbee dans HA |
@@ -107,7 +108,7 @@ Chaque appareil Zigbee appairé crée automatiquement ses entités (capteurs, in
 
 ## Notes importantes
 
-- La passerelle **doit avoir une IP fixe** — si l'IP change, Z2M ne démarre plus
+- La passerelle a l'IP `192.168.2.224` — **assigner un bail DHCP statique** par MAC dans le routeur pour que ça ne change pas
 - Le port `8888` est le défaut Tasmota ; vérifier dans la console Tasmota avec `Status 13`
 - L'interface frontend Z2M est accessible même sans passer par HA (utile pour debug)
 - Mosquitto doit être **démarré avant** Z2M au boot (l'ordre est géré automatiquement par HAOS)
