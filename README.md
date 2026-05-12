@@ -6,11 +6,27 @@ Documentation technique complète pour :
 
 ---
 
+## ✅ Statut : validé en production
+
+| Élément | Valeur |
+|---|---|
+| Passerelle | Lidl SilverCrest HG06668 |
+| Firmware | Tasmota (EZSP v7) |
+| IP | `192.168.2.224` |
+| Port TCP | `8888` |
+| Adapter Z2M | `ezsp` |
+| Z2M version | `2.10.1` |
+| Coordinator firmware | `6.5.0.0 build 188` |
+
+> ⚠️ La puce n'est **pas** un CC2530 Z-Stack comme indiqué sur certaines sources — c'est **EZSP v7** (Silicon Labs). Utiliser `adapter: ezsp` et non `zstack`.
+
+---
+
 ## Matériel concerné
 
 | Produit | Référence | Puce Zigbee |
 |---|---|---|
-| Passerelle Zigbee Lidl SilverCrest | HG06668 | Texas Instruments CC2530 |
+| Passerelle Zigbee Lidl SilverCrest | HG06668 | Silicon Labs EZSP v7 |
 
 ---
 
@@ -18,8 +34,8 @@ Documentation technique complète pour :
 
 ```
 docs/
-├── 01_flash_passerelle.md   → Flash firmware Tasmota + Z2M gateway
-├── 02_installation_z2m.md   → Installation Z2M sur HAOS
+├── 01_flash_passerelle.md   → Flash firmware Tasmota + gateway TCP
+├── 02_installation_z2m.md   → Installation Z2M sur HAOS (config validée)
 └── 03_troubleshooting.md    → Problèmes connus & solutions
 ```
 
