@@ -39,12 +39,12 @@ Rafraîchir la page, chercher **Zigbee2MQTT** → **Installer**.
 
 Avant le premier démarrage, aller dans l'onglet **Configuration** de l'add-on.
 
-### Configuration minimale
+### ✅ Configuration validée en production
 
 ```yaml
 serial:
   port: 'tcp://192.168.2.224:8888'
-  adapter: zstack
+  adapter: ezsp
 
 mqtt:
   server: mqtt://core-mosquitto
@@ -57,18 +57,29 @@ frontend:
   port: 8099
 ```
 
-> **IP de la passerelle Lidl HG06668 (flashée Tasmota) : `192.168.2.224`**  
-> Port TCP par défaut Tasmota : `8888`
+> **IP passerelle Lidl HG06668 : `192.168.2.224`**  
+> **Port TCP Tasmota : `8888`**  
+> ⚠️ `adapter: ezsp` — PAS `zstack` (la puce interne est EZSP, pas CC2530 Z-Stack)
 
 ### Paramètres expliqués
 
 | Paramètre | Valeur | Explication |
 |---|---|---|
-| `serial.port` | `tcp://192.168.2.224:8888` | Coordinateur CC2530 exposé via socket TCP par Tasmota |
-| `serial.adapter` | `zstack` | Type de puce : CC2530 = Z-Stack |
+| `serial.port` | `tcp://192.168.2.224:8888` | Coordinateur exposé via socket TCP par Tasmota |
+| `serial.adapter` | `ezsp` | Type de puce réel détecté : EZSP v7 |
 | `mqtt.server` | `mqtt://core-mosquitto` | Broker Mosquitto interne HAOS |
 | `homeassistant.enabled` | `true` | Découverte automatique des appareils Zigbee dans HA |
-| `frontend.port` | `8099` | Interface web Z2M accessible sur `http://IP-HA:8099` |
+| `frontend.port` | `8099` | Interface web Z2M : `http://IP-HAOS:8099` |
+
+---
+
+## Coordinator détecté (info réelle)
+
+```
+type: EZSP v7
+firmware: 6.5.0.0 build 188
+IEEE: 0x60a423fffe15d0b6
+```
 
 ---
 
@@ -79,10 +90,13 @@ frontend:
 ### Logs attendus au démarrage nominal
 
 ```
-[Z2M] Starting Zigbee2MQTT...
-[Z2M] Connected to MQTT server
-[Z2M] Coordinator firmware version: {"type":"zStack12","meta":{"revision":...}}
-[Z2M] Started successfully
+zh:ezsp:znp: Socket connected
+zh:ezsp:znp: Socket ready
+z2m: zigbee-herdsman started
+z2m: Coordinator firmware version: EZSP v7 6.5.0.0 build 188
+z2m: Connected to MQTT server
+z2m: Started frontend on port 8099
+z2m: Zigbee2MQTT started!
 ```
 
 ---
@@ -108,7 +122,8 @@ Chaque appareil Zigbee appairé crée automatiquement ses entités (capteurs, in
 
 ## Notes importantes
 
-- La passerelle a l'IP `192.168.2.224` — **assigner un bail DHCP statique** par MAC dans le routeur pour que ça ne change pas
+- La passerelle a l'IP `192.168.2.224` — **assigner un bail DHCP statique** par MAC dans le routeur
 - Le port `8888` est le défaut Tasmota ; vérifier dans la console Tasmota avec `Status 13`
 - L'interface frontend Z2M est accessible même sans passer par HA (utile pour debug)
-- Mosquitto doit être **démarré avant** Z2M au boot (l'ordre est géré automatiquement par HAOS)
+- Mosquitto doit être démarré avant Z2M (géré automatiquement par HAOS)
+- Le warning `ezsp deprecated` dans les logs est normal pour ce firmware 6.5.x — fonctionnel
